@@ -47,10 +47,78 @@ def mergesort(array, byfunc=None):
     mergesort_recursive(array,0,len(array)-1,byfunc)
 
 class Stack:
-  pass
+    def __init__(self):
+        self.__items = []
+
+    def push(self, item):
+        self.__items.append(item)
+
+    def pop(self):
+        n = len(self.__items)
+        if self.size > 0:
+            popped_item = self.__items.pop(self.size-1)
+            return popped_item
+        else:
+            return None
+    
+    def peek(self):
+        n = len(self.__items)
+        return self.__items[n-1]
+
+    @property
+    def is_empty(self):
+        if self.__items == []:
+            return True
+        else:
+            return False
+
+    @property
+    def size(self):
+        n = len(self.__items)
+        return n
 
 class EvaluateExpression:
-  pass
+
+    valid_char = '0123456789+-*/() '
+    
+    def __init__(self, string=""):
+        self.expression = string
+
+    @property
+    def expression(self):
+        return self._expression
+
+    @expression.setter
+    def expression(self, new_expr):
+        bool1 = True
+
+        if not isinstance(new_expr,str):
+            bool1 = False
+
+        for i in new_expr:
+            if i not in EvaluateExpression.valid_char:
+                bool1 = False
+
+        if bool1 == True:
+            self._expression = new_expr
+        else:
+            self._expression = ""
+    def insert_space(self):
+        spaced = ""
+        for i in self.expression:
+            if i in "()/+-*":
+                spaced = spaced + " " + i + " "
+            else:
+                spaced += i
+        print(spaced)
+        return spaced
+	
+    def process_operator(self, operand_stack, operator_stack):
+        number1 = str(operand_stack.pop())
+        number2 = str(operand_stack.pop())
+        operator = str(operator_stack.pop())
+        operand_stack.push(int(eval(number2+operator+number1)))
+        print(operand_stack.peek())
 
 
 def get_smallest_three(challenge):
