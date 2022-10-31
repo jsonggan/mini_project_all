@@ -110,7 +110,6 @@ class EvaluateExpression:
                 spaced = spaced + " " + i + " "
             else:
                 spaced += i
-        print(spaced)
         return spaced
 	
     def process_operator(self, operand_stack, operator_stack):
@@ -118,8 +117,33 @@ class EvaluateExpression:
         number2 = str(operand_stack.pop())
         operator = str(operator_stack.pop())
         operand_stack.push(int(eval(number2+operator+number1)))
-        print(operand_stack.peek())
-
+    
+    def evaluate(self):
+        operand_stack = Stack()
+        operator_stack = Stack()
+        expression = self.insert_space()
+        tokens = expression.split()
+        for index,i in enumerate(tokens):
+            if i in "1234567890":
+                operand_stack.push(i)
+            if i in "+-":
+                while (operator_stack.size != 0 ) and (operator_stack.peek() not in "()"):
+                    self.process_operator(operand_stack,operator_stack)
+                operator_stack.push(i)
+            if i in "*/":
+                while operator_stack.size !=0 and operator_stack.peek() in '*/':
+                    self.process_operator(operand_stack,operator_stack)
+                operator_stack.push(i)
+            if i== '(':
+                operator_stack.push(i)
+            if i == ')':
+                while operator_stack.peek() != '(':
+                    self.process_operator(operand_stack,operator_stack)
+                operator_stack.pop()
+            if index+1 == len(tokens):
+                self.process_operator(operand_stack,operator_stack)
+        return operand_stack.pop()
+            
 
 def get_smallest_three(challenge):
   records = challenge.records
